@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel-1 LULC Classification Dashboard</title>
+
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+header {
+    background: #17202a;
+    color: white;
+    padding: 28px 40px;
+}
+header h1 { margin: 0 0 8px 0; }
+header p { margin: 0; color: #d5d8dc; }
+
+.container {
+    max-width: 1250px;
+    margin: 30px auto;
+    padding: 0 25px;
+}
+
+.section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.metric {
+    background: #f8f9fa;
+    border-left: 5px solid #3498db;
+    padding: 20px;
+    border-radius: 8px;
+}
+.metric .value {
+    font-size: 30px;
+    font-weight: bold;
+}
+.metric .label {
+    color: #6b7280;
+    margin-top: 6px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #17202a;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+th, td {
+    padding: 11px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background: #17202a;
+    color: white;
+}
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.bar-container {
+    width: 100%;
+    background: #e5e7eb;
+    height: 22px;
+    border-radius: 5px;
+}
+.bar {
+    height: 22px;
+    border-radius: 5px;
+    background: #3498db;
+}
+
+.note {
+    background: #fff8e1;
+    border-left: 5px solid #f39c12;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.success {
+    background: #eafaf1;
+    border-left: 5px solid #27ae60;
+    padding: 15px;
+}
+
+.footer {
+    text-align: center;
+    color: #6b7280;
+    padding: 30px;
+}
+
+@media(max-width:800px) {
+    .metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Sentinel-1 LULC Classification Dashboard</h1>
+<p>Deep Learning Project — Small U-Net Land-Cover Classification</p>
+</header>
+
+<div class="container">
+
+<!-- OVERVIEW -->
+<div class="section">
+<h2>1. Project Overview</h2>
+
+<p>
+This project develops a deep learning model for pixel-level Land Use /
+Land Cover (LULC) classification using Sentinel-1 VV and VH radar imagery.
+The model is based on a Small U-Net architecture and predicts nine
+land-cover classes.
+</p>
+
+<div class="metrics">
+<div class="metric">
+<div class="value">53.50%</div>
+<div class="label">Test Accuracy</div>
+</div>
+
+<div class="metric">
+<div class="value">30.55%</div>
+<div class="label">Test mIoU</div>
+</div>
+
+<div class="metric">
+<div class="value">50.58%</div>
+<div class="label">Validation Accuracy</div>
+</div>
+
+<div class="metric">
+<div class="value">29.51%</div>
+<div class="label">Validation mIoU</div>
+</div>
+</div>
+</div>
+
+<!-- DATASET -->
+<div class="section">
+<h2>2. Dataset & Preprocessing</h2>
+
+<table>
+<tr><th>Component</th><th>Value</th></tr>
+<tr><td>Training patches</td><td>21,782</td></tr>
+<tr><td>Validation patches</td><td>4,993</td></tr>
+<tr><td>Test patches</td><td>5,050</td></tr>
+<tr><td>Input channels</td><td>2 — Sentinel-1 VV and VH</td></tr>
+<tr><td>Patch size</td><td>256 × 256 pixels</td></tr>
+<tr><td>Number of classes</td><td>9</td></tr>
+<tr><td>Architecture</td><td>Small U-Net</td></tr>
+</table>
+</div>
+
+<!-- PERFORMANCE -->
+<div class="section">
+<h2>3. Model Performance</h2>
+
+<table>
+<tr>
+<th>Metric</th>
+<th>Validation</th>
+<th>Test</th>
+</tr>
+<tr>
+<td>Accuracy</td>
+<td>50.58%</td>
+<td>53.50%</td>
+</tr>
+<tr>
+<td>mIoU</td>
+<td>29.51%</td>
+<td>30.55%</td>
+</tr>
+</table>
+
+<div class="success">
+<strong>Majority baseline:</strong> 17.71% accuracy.
+<br>
+The trained model therefore substantially exceeds the majority-class
+baseline.
+</div>
+</div>
+
+<!-- PER CLASS -->
+<div class="section">
+<h2>4. Per-Class Test Performance</h2>
+
+<table>
+<tr>
+<th>Class</th>
+<th>IoU</th>
+<th>F1 Score</th>
+</tr>
+
+<tr>
+<td>Forest</td>
+<td>16.78%</td>
+<td>28.73%</td>
+</tr>
+
+<tr>
+<td>Shrubland</td>
+<td>8.04%</td>
+<td>14.89%</td>
+</tr>
+
+<tr>
+<td>Savanna</td>
+<td>43.06%</td>
+<td>60.20%</td>
+</tr>
+
+<tr>
+<td>Grassland</td>
+<td>11.75%</td>
+<td>21.03%</td>
+</tr>
+
+<tr>
+<td>Wetland</td>
+<td>7.61%</td>
+<td>14.14%</td>
+</tr>
+
+<tr>
+<td>Cropland</td>
+<td>49.98%</td>
+<td>66.65%</td>
+</tr>
+
+<tr>
+<td>Urban / Built-up</td>
+<td>60.45%</td>
+<td>75.35%</td>
+</tr>
+
+<tr>
+<td>Barren</td>
+<td>28.01%</td>
+<td>43.76%</td>
+</tr>
+
+<tr>
+<td>Water</td>
+<td>49.27%</td>
+<td>66.01%</td>
+</tr>
+</table>
+
+<div class="note">
+<strong>Best-performing class:</strong> Urban / Built-up
+with 60.45% IoU and 75.35% F1.
+<br><br>
+<strong>Weakest class:</strong> Wetland with 7.61% IoU and 14.14% F1.
+</div>
+</div>
+
+<!-- CLASS BARS -->
+<div class="section">
+<h2>5. IoU Comparison</h2>
+
+<p>Forest</p>
+<div class="bar-container"><div class="bar" style="width:16.78%"></div></div>
+
+<p>Shrubland</p>
+<div class="bar-container"><div class="bar" style="width:8.04%"></div></div>
+
+<p>Savanna</p>
+<div class="bar-container"><div class="bar" style="width:43.06%"></div></div>
+
+<p>Grassland</p>
+<div class="bar-container"><div class="bar" style="width:11.75%"></div></div>
+
+<p>Wetland</p>
+<div class="bar-container"><div class="bar" style="width:7.61%"></div></div>
+
+<p>Cropland</p>
+<div class="bar-container"><div class="bar" style="width:49.98%"></div></div>
+
+<p>Urban / Built-up</p>
+<div class="bar-container"><div class="bar" style="width:60.45%"></div></div>
+
+<p>Barren</p>
+<div class="bar-container"><div class="bar" style="width:28.01%"></div></div>
+
+<p>Water</p>
+<div class="bar-container"><div class="bar" style="width:49.27%"></div></div>
+</div>
+
+<!-- PROTOTYPE -->
+<div class="section">
+<h2>6. January 2025 Lagos Prototype</h2>
+
+<p>
+A real Sentinel-1 January 2025 monthly composite was obtained for the
+Lagos study area around approximately 3.3792°E, 6.5244°N.
+The trained model was then applied to the unseen monthly imagery.
+</p>
+
+<table>
+<tr><th>Prototype component</th><th>Result</th></tr>
+<tr><td>Location</td><td>Lagos, Nigeria</td></tr>
+<tr><td>Input</td><td>Sentinel-1 VV + VH</td></tr>
+<tr><td>Temporal period</td><td>January 2025</td></tr>
+<tr><td>Model</td><td>Trained Small U-Net</td></tr>
+<tr><td>Dominant prediction</td><td>Urban / Built-up</td></tr>
+<tr><td>Urban prediction share</td><td>~99.55%</td></tr>
+</table>
+
+<div class="note">
+The prototype demonstrates the complete inference pipeline, but the
+prediction should not be interpreted as validated ground truth.
+The January 2025 Sentinel-1 input shows a distribution shift relative
+to the training data.
+</div>
+</div>
+
+<!-- INDEPENDENT VALIDATION -->
+<div class="section">
+<h2>7. Independent LULC Sanity Check</h2>
+
+<p>
+The model output was compared qualitatively with ESA WorldCover 2021,
+which was not used as the training dataset.
+</p>
+
+<table>
+<tr>
+<th>Class</th>
+<th>Model — January 2025</th>
+<th>ESA WorldCover 2021</th>
+</tr>
+
+<tr>
+<td>Forest</td>
+<td>0.000%</td>
+<td>4.535%</td>
+</tr>
+
+<tr>
+<td>Grassland</td>
+<td>0.000%</td>
+<td>1.204%</td>
+</tr>
+
+<tr>
+<td>Cropland</td>
+<td>0.0118%</td>
+<td>0.0799%</td>
+</tr>
+
+<tr>
+<td>Urban / Built-up</td>
+<td>99.874%</td>
+<td>88.586%</td>
+</tr>
+
+<tr>
+<td>Barren</td>
+<td>0.000%</td>
+<td>0.186%</td>
+</tr>
+
+<tr>
+<td>Water</td>
+<td>0.000%</td>
+<td>3.913%</td>
+</tr>
+
+<tr>
+<td>Wetland</td>
+<td>0.000%</td>
+<td>0.299%</td>
+</tr>
+</table>
+
+<div class="note">
+<strong>Important:</strong> This is a qualitative sanity check rather
+than a formal accuracy assessment. ESA WorldCover represents 2021,
+whereas the model input represents January 2025. Therefore, differences
+may result from temporal change, sensor/input distribution shift,
+class-definition differences, and model limitations.
+</div>
+</div>
+
+<!-- LIMITATIONS -->
+<div class="section">
+<h2>8. Critical Discussion & Limitations</h2>
+
+<ul>
+<li>
+The model achieves 53.50% test accuracy and 30.55% mIoU, demonstrating
+meaningful predictive capability above the 17.71% majority baseline.
+</li>
+
+<li>
+Performance varies substantially between classes. Urban/Built-up,
+Cropland and Water perform considerably better than minority classes
+such as Wetland and Shrubland.
+</li>
+
+<li>
+The prediction distribution indicates a tendency toward dominant classes,
+especially Cropland and Urban/Built-up.
+</li>
+
+<li>
+The January 2025 Lagos prototype shows strong Urban/Built-up dominance,
+which should be interpreted cautiously because of distribution shift.
+</li>
+
+<li>
+The comparison with ESA WorldCover 2021 provides an independent
+reference for sanity checking but cannot be considered a formal
+ground-truth accuracy measurement.
+</li>
+
+<li>
+Future improvements could include class balancing, additional training
+data for minority classes, longer training, augmentation, improved
+normalisation, and temporal/multi-season Sentinel-1 observations.
+</li>
+</ul>
+</div>
+
+<!-- FINAL -->
+<div class="section">
+<h2>9. Final Project Summary</h2>
+
+<div class="success">
+<strong>Conclusion:</strong><br><br>
+
+The developed Sentinel-1 LULC classification pipeline successfully
+covers dataset preparation, model training, quantitative evaluation,
+and inference on a real-world January 2025 Lagos Sentinel-1 composite.
+The Small U-Net achieves 53.50% test accuracy and 30.55% mean IoU,
+outperforming the 17.71% majority baseline. The prototype demonstrates
+the feasibility of applying the trained model to unseen satellite
+imagery, while the independent ESA WorldCover comparison provides an
+external qualitative sanity check. The main limitation is uneven
+performance across land-cover classes and the observed distribution
+shift between training data and the real-world prototype imagery.
+</div>
+</div>
+
+<div class="footer">
+Sentinel-1 LULC Deep Learning Project<br>
+Small U-Net • 9 Classes • January 2025 Lagos Prototype
+</div>
+
+</div>
+</body>
+</html>

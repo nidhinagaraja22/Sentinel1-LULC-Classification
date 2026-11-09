@@ -1,0 +1,2 @@
+# Stage 1 uses only Python's standard library. No pip installation is needed.
+# Training and application dependencies will be added after checking Data Lab.
